@@ -10,10 +10,10 @@ public class Stars {
             String template = scanner.next();
 
             for (int i = 0; i < n; i++) {
-                for (int j = 0; j < m; j++) {
+                for (int j = 1; j < m; j++) {
                     System.out.print(template + " ");
                 }
-                System.out.println();
+                System.out.println(template);
             }
         }
     }
