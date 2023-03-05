@@ -10,18 +10,21 @@ public class Guess {
         System.out.println("Я загадал число. У тебя " + maxAttempts + " попыток угадать.");
 
         Scanner scanner = new Scanner(System.in);
-        for (int i = 1; i <= maxAttempts; i++) {
+        int i;
+        for (i = 1; i <= maxAttempts; i++) {
             int n = scanner.nextInt();
             if (number == n) {
-                System.out.println("Ты угадал с " + i + " попытки");
                 break;
-            } else if (i == maxAttempts) {
-                System.out.println("Ты не угадал");
             } else if (number < n) {
                 System.out.println("Мое число меньше! У тебя осталось " + (maxAttempts - i) + " попыток");
             } else {
                 System.out.println("Мое число больше! У тебя осталось " + (maxAttempts - i) + " попыток");
             }
+        }
+        if (i > maxAttempts) {
+            System.out.println("Ты не угадал");
+        } else {
+            System.out.println("Ты угадал с " + i + " попытки");
         }
     }
 }
