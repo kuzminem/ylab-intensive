@@ -1,4 +1,4 @@
-package io.ylab.stars;
+package io.ylab.task01.stars;
 
 import java.util.Scanner;
 

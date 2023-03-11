@@ -1,4 +1,4 @@
-package io.ylab.guess;
+package io.ylab.task01.guess;
 
 import java.util.Random;
 import java.util.Scanner;

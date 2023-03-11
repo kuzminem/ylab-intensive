@@ -1,4 +1,4 @@
-package io.ylab.pell;
+package io.ylab.task01.pell;
 
 import java.util.Scanner;
 

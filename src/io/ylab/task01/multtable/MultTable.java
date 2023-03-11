@@ -1,4 +1,4 @@
-package io.ylab.multtable;
+package io.ylab.task01.multtable;
 
 public class MultTable {
     public static void main(String[] args) {
