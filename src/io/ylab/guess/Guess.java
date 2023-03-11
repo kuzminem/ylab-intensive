@@ -13,14 +13,15 @@ public class Guess {
         int i;
         for (i = 1; i <= maxAttempts; i++) {
             int n = scanner.nextInt();
-            if (number == n) {
-                break;
-            } else if (number < n) {
+            if (number < n) {
                 System.out.println("Мое число меньше! У тебя осталось " + (maxAttempts - i) + " попыток");
-            } else {
+            } else if (number > n) {
                 System.out.println("Мое число больше! У тебя осталось " + (maxAttempts - i) + " попыток");
+            } else {
+                break;
             }
         }
+        scanner.close();
         if (i > maxAttempts) {
             System.out.println("Ты не угадал");
         } else {
