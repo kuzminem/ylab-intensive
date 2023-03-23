@@ -5,15 +5,15 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class TempFile {
-    private final String filePath;
+public class ReadTempFile {
+    private final String fileName;
     private final BufferedReader reader;
     private long value;
     private boolean isReady = true;
 
-    TempFile(String filePath) throws IOException {
-        this.filePath = filePath;
-        this.reader = new BufferedReader(new FileReader(this.filePath));
+    ReadTempFile(WriteTempFile writeTempFile) throws IOException {
+        this.fileName = writeTempFile.getFileName();
+        this.reader = new BufferedReader(new FileReader(this.fileName));
         this.value = Long.parseLong(reader.readLine());
     }
 
@@ -26,7 +26,7 @@ public class TempFile {
     }
 
     public void read() throws IOException {
-        String line = reader.readLine();
+        String line = this.reader.readLine();
         if (line == null) {
             this.isReady = false;
         } else {
@@ -36,9 +36,9 @@ public class TempFile {
 
     public void delete() throws IOException {
         this.reader.close();
-        File file = new File(this.filePath);
+        File file = new File(this.fileName);
         if (!file.delete()) {
-            System.out.println("Ошибка при удалении файла " + this.filePath);
+            System.out.println("Ошибка при удалении файла " + this.fileName);
         }
     }
 }

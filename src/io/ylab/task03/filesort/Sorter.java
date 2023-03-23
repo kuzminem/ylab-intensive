@@ -5,12 +5,12 @@ import java.io.IOException;
 
 public class Sorter {
     public File sortFile(File dataFile) throws IOException {
-        final int NUMBER_OF_FILES = 2;
+        final int NUMBER_OF_PARTS = 4;
 
-        Separator separator = new Separator(dataFile, NUMBER_OF_FILES);
+        Separator separator = new Separator(dataFile, NUMBER_OF_PARTS);
 
         Collector collector = new Collector(separator);
 
-        return new File(separator.getFolder() + "sorted.txt");
+        return collector.getSortedFile();
     }
 }
