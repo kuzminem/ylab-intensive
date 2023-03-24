@@ -17,13 +17,14 @@ public class TempFile {
 
     TempFile(String fileName, List<Long> list) throws IOException {
         this.fileName = fileName;
-        Collections.sort(list);
         try (BufferedWriter writer = new BufferedWriter(
                 new FileWriter(this.fileName))) {
+            Collections.sort(list);
             for (Long l : list) {
                 writer.write(l + "\r\n");
             }
         }
+        list = null;
 
         this.reader = new BufferedReader(new FileReader(this.fileName));
         this.value = Long.parseLong(this.reader.readLine());
