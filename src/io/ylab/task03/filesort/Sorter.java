@@ -36,21 +36,19 @@ public class Sorter {
         List<TempFile> tempFiles = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(dataFile))) {
             int tempFileLines = dataFileLines / filesNumber;
-            int capacity = (int) (tempFileLines * 1.4);
             for (int i = 0; i < filesNumber - 1; i++) {
                 tempFiles.add(new TempFile(folder + i + ".txt",
-                        readList(reader, tempFileLines, capacity)));
+                        readList(reader, tempFileLines)));
             }
             tempFileLines = dataFileLines - tempFileLines * (filesNumber - 1);
-            capacity = (int) (tempFileLines * 1.4);
             tempFiles.add(new TempFile(folder + (filesNumber - 1) + ".txt",
-                    readList(reader, tempFileLines, capacity)));
+                    readList(reader, tempFileLines)));
         }
         return tempFiles;
     }
 
-    private List<Long> readList(BufferedReader reader, int tempFileLines, int capacity) throws IOException {
-        List<Long> list = new ArrayList<>(capacity);
+    private List<Long> readList(BufferedReader reader, int tempFileLines) throws IOException {
+        List<Long> list = new ArrayList<>(tempFileLines * 2);
         for (int i = 0; i < tempFileLines; i++) {
             String line = reader.readLine();
             list.add(Long.parseLong(line));
