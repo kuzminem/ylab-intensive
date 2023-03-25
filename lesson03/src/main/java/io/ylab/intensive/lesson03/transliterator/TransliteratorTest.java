@@ -4,7 +4,7 @@ import io.ylab.intensive.lesson03.transliterator.TransliteratorImpl;
 
 public class TransliteratorTest {
     public static void main(String[] args) {
-        io.ylab.task03.transliterator.Transliterator transliterator = new TransliteratorImpl();
+        io.ylab.intensive.lesson03.transliterator.Transliterator transliterator = new TransliteratorImpl();
 
         String res = transliterator
                 .transliterate("HELLO! ПРИВЕТ! Go, boy!");

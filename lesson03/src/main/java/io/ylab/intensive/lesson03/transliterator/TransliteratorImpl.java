@@ -4,7 +4,7 @@ import java.util.Map;
 
 import static java.util.Map.entry;
 
-public class TransliteratorImpl implements io.ylab.task03.transliterator.Transliterator {
+public class TransliteratorImpl implements io.ylab.intensive.lesson03.transliterator.Transliterator {
     private static final Map<Character, String> LETTER_MAP = Map.ofEntries(
             entry('А', "A"),
             entry('Б', "B"),

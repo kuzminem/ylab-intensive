@@ -24,7 +24,6 @@ public class TempFile {
                 writer.write(l + "\r\n");
             }
         }
-        list = null;
 
         this.reader = new BufferedReader(new FileReader(this.fileName));
         this.value = Long.parseLong(this.reader.readLine());

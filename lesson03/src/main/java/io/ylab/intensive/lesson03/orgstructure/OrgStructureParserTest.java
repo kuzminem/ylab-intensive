@@ -6,7 +6,7 @@ import java.util.List;
 
 public class OrgStructureParserTest {
     public static void main(String[] args) throws IOException {
-        File csvFile = new File("src/io/ylab/task03/orgstructure/resources/OrgStructure.csv");
+        File csvFile = new File("lesson03/src/main/resources/orgstructure/OrgStructure.csv");
         OrgStructureParser orgStructureParser = new OrgStructureParserImpl();
         Employee boss = orgStructureParser.parseStructure(csvFile);
         System.out.println(show(boss));
