@@ -16,6 +16,9 @@ public class MovieTest {
 
         /**
          * Тут написать в комментариях запрос получения всех
+         * select subject, count(*)
+         * from movie m
+         * group by subject;
          */
     }
 
