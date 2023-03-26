@@ -1,3 +1,8 @@
 .idea/
-target/
 *.iml
+
+target/
+
+lesson01/
+lesson02/
+lesson03/
