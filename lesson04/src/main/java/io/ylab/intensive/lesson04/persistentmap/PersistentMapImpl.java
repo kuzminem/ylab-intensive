@@ -1,52 +1,143 @@
 package io.ylab.intensive.lesson04.persistentmap;
 
-import java.sql.SQLException;
-import java.util.List;
 import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Класс, методы которого надо реализовать 
+ * Класс, методы которого надо реализовать
  */
 public class PersistentMapImpl implements PersistentMap {
-  
-  private DataSource dataSource;
+    private final DataSource dataSource;
+    private String mapName;
 
-  public PersistentMapImpl(DataSource dataSource) {
-    this.dataSource = dataSource;
-  }
+    public PersistentMapImpl(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
-  @Override
-  public void init(String name) {
-    
-  }
+    @Override
+    public void init(String name) {
+        this.mapName = name;
+    }
 
-  @Override
-  public boolean containsKey(String key) throws SQLException {
-    return false;
-  }
+    @Override
+    public boolean containsKey(String key) throws SQLException {
+        Connection connection = this.dataSource.getConnection();
+        String selectQuery = "select count(*) "
+                + "from persistent_map "
+                + "where map_name = ? "
+                + "and key = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+        preparedStatement.setString(1, this.mapName);
+        preparedStatement.setString(2, key);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        int result = 0;
+        if (resultSet.next()) {
+            result = resultSet.getInt("count");
+        }
+        connection.close();
+        return result == 1;
+    }
 
-  @Override
-  public List<String> getKeys() throws SQLException {
-    return null;
-  }
+    @Override
+    public List<String> getKeys() throws SQLException {
+        Connection connection = this.dataSource.getConnection();
+        String selectQuery = "select key "
+                + "from persistent_map "
+                + "where map_name = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+        preparedStatement.setString(1, this.mapName);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        List<String> keys = new ArrayList<>();
+        while (resultSet.next()) {
+            keys.add(resultSet.getString("key"));
+        }
+        connection.close();
+        return keys;
+    }
 
-  @Override
-  public String get(String key) throws SQLException {
-    return null;
-  }
+    @Override
+    public String get(String key) throws SQLException {
+        Connection connection = this.dataSource.getConnection();
+        String selectQuery = "select value "
+                + "from persistent_map "
+                + "where map_name = ? "
+                + "and key = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+        preparedStatement.setString(1, this.mapName);
+        preparedStatement.setString(2, key);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        String value = null;
+        if (resultSet.next()) {
+            value = resultSet.getString("value");
+        }
+        connection.close();
+        return value;
+    }
 
-  @Override
-  public void remove(String key) throws SQLException {
+    @Override
+    public void remove(String key) throws SQLException {
+        Connection connection = this.dataSource.getConnection();
+        String insertQuery = "delete "
+                + "from persistent_map "
+                + "where map_name = ? "
+                + "and key = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+        preparedStatement.setString(1, this.mapName);
+        preparedStatement.setString(2, key);
+        preparedStatement.executeUpdate();
+        connection.close();
+    }
 
-  }
+    @Override
+    public void put(String key, String value) throws SQLException {
+        if (containsKey(key)) {
+            update(key, value);
+        } else {
+            create(key, value);
+        }
+    }
 
-  @Override
-  public void put(String key, String value) throws SQLException {
+    private void update(String key, String value) throws SQLException {
+        Connection connection = this.dataSource.getConnection();
+        String insertQuery = "update persistent_map "
+                + "set value = ? "
+                + "where map_name = ? "
+                + "and key = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+        preparedStatement.setString(1, value);
+        preparedStatement.setString(2, this.mapName);
+        preparedStatement.setString(3, key);
+        preparedStatement.executeUpdate();
+        connection.close();
+    }
 
-  }
+    private void create(String key, String value) throws SQLException {
+        Connection connection = this.dataSource.getConnection();
+        String insertQuery = "insert into persistent_map "
+                + "(map_name, key, value) "
+                + "values (?, ?, ?)";
+        PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+        preparedStatement.setString(1, this.mapName);
+        preparedStatement.setString(2, key);
+        preparedStatement.setString(3, value);
+        preparedStatement.executeUpdate();
+        connection.close();
+    }
 
-  @Override
-  public void clear() throws SQLException {
-
-  }
+    @Override
+    public void clear() throws SQLException {
+        Connection connection = this.dataSource.getConnection();
+        String insertQuery = "delete "
+                + "from persistent_map "
+                + "where map_name = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+        preparedStatement.setString(1, this.mapName);
+        preparedStatement.executeUpdate();
+        connection.close();
+    }
 }
