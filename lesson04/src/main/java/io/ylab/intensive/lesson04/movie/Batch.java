@@ -15,8 +15,8 @@ public class Batch {
         this.connection.setAutoCommit(false);
 
         String insertQuery = "insert into movie "
-                + "(year, length, title, subject, actors, actress, director, popularity, awards)"
-                + " values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "(year, length, title, subject, actors, actress, director, popularity, awards) "
+                + "values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         this.preparedStatement = this.connection.prepareStatement(insertQuery);
     }
