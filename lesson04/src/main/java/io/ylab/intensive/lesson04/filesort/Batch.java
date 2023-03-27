@@ -11,7 +11,7 @@ public class Batch {
     private final int capacity;
     private int counter;
 
-    Batch(DataSource dataSource, int capacity) throws SQLException {
+    public Batch(DataSource dataSource, int capacity) throws SQLException {
         this.connection = dataSource.getConnection();
         this.connection.setAutoCommit(false);
         String insertQuery = "insert into numbers (val) values (?)";
