@@ -14,7 +14,7 @@ public class Packer {
                 movie.setYear(Integer.parseInt(fields[0]));
             }
         } catch (IllegalArgumentException e) {
-            System.out.println(e);
+            System.err.println(e);
         }
 
         try {
@@ -26,7 +26,7 @@ public class Packer {
                 movie.setLength(Integer.parseInt(fields[1]));
             }
         } catch (IllegalArgumentException e) {
-            System.out.println(e);
+            System.err.println(e);
         }
 
         try {
@@ -38,7 +38,7 @@ public class Packer {
                 movie.setSubject(fields[3]);
             }
         } catch (IllegalArgumentException e) {
-            System.out.println(e);
+            System.err.println(e);
         }
 
         try {
@@ -50,7 +50,7 @@ public class Packer {
                 movie.setActors(fields[4]);
             }
         } catch (IllegalArgumentException e) {
-            System.out.println(e);
+            System.err.println(e);
         }
 
         try {
@@ -62,7 +62,7 @@ public class Packer {
                 movie.setActress(fields[5]);
             }
         } catch (IllegalArgumentException e) {
-            System.out.println(e);
+            System.err.println(e);
         }
 
         try {
@@ -74,7 +74,7 @@ public class Packer {
                 movie.setDirector(fields[6]);
             }
         } catch (IllegalArgumentException e) {
-            System.out.println(e);
+            System.err.println(e);
         }
 
         try {
@@ -86,7 +86,7 @@ public class Packer {
                 movie.setPopularity(Integer.parseInt(fields[7]));
             }
         } catch (IllegalArgumentException e) {
-            System.out.println(e);
+            System.err.println(e);
         }
 
         try {
@@ -98,7 +98,7 @@ public class Packer {
                 movie.setAwards(fields[8].equals("Yes"));
             }
         } catch (IllegalArgumentException e) {
-            System.out.println(e);
+            System.err.println(e);
         }
 
         return movie;

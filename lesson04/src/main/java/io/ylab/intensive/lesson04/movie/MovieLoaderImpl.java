@@ -46,7 +46,7 @@ public class MovieLoaderImpl implements MovieLoader {
                     Movie movie = packer.getMovie(fields, linesCounter);
                     batch.add(movie);
                 } catch (IllegalArgumentException e) {
-                    System.out.println(e);
+                    System.err.println(e);
                 }
             }
             batch.send();
