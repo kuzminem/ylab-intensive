@@ -10,7 +10,7 @@ public class Batch {
     private final Connection connection;
     private final PreparedStatement preparedStatement;
 
-    Batch(DataSource dataSource) throws SQLException {
+    public Batch(DataSource dataSource) throws SQLException {
         this.connection = dataSource.getConnection();
         this.connection.setAutoCommit(false);
 
