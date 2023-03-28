@@ -9,19 +9,34 @@ public class PersistentMapTest {
     public static void main(String[] args) throws SQLException {
         DataSource dataSource = initDb();
         PersistentMap persistentMap = new PersistentMapImpl(dataSource);
-        // Написать код демонстрации работы
+
         persistentMap.init("firstMap");
         persistentMap.put("One", "Uno");
-        System.out.println(persistentMap.containsKey("One"));
+        persistentMap.put("Two", "Due");
+        persistentMap.put("Three", "Tre");
+        persistentMap.put("Four", "Quattro");
+        persistentMap.put("Five", "Cinque");
+
+        persistentMap.init("secondMap");
+        persistentMap.put("One", "Eins");
+        persistentMap.put("Two", "Zwei");
+        persistentMap.put("Three", "Drei");
+        persistentMap.put("Four", "Vier");
+        persistentMap.put("Five", "Funf");
+
+        persistentMap.init("firstMap");
+        System.out.println(persistentMap.getKeys());
         System.out.println(persistentMap.containsKey("Two"));
-        System.out.println(persistentMap.get("One"));
-        persistentMap.put("One", "Due");
-        System.out.println(persistentMap.get("One"));
-        persistentMap.put("Two", "Uno");
-        System.out.println(persistentMap.getKeys());
-        persistentMap.remove("One");
-        System.out.println(persistentMap.getKeys());
+        System.out.println(persistentMap.get("Two"));
+        System.out.println(persistentMap.containsKey("Six"));
+        System.out.println(persistentMap.get("Six"));
         persistentMap.clear();
+        System.out.println(persistentMap.getKeys());
+
+        persistentMap.init("secondMap");
+        System.out.println(persistentMap.get("Three"));
+        persistentMap.put("Three", "Polizei");
+        System.out.println(persistentMap.get("Three"));
         System.out.println(persistentMap.getKeys());
     }
 
