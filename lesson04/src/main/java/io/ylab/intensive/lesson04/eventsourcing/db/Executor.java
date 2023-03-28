@@ -50,11 +50,12 @@ public class Executor {
             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
             preparedStatement.setLong(1, personId);
             ResultSet resultSet = preparedStatement.executeQuery();
+            connection.close();
+
             int result = 0;
             if (resultSet.next()) {
                 result = resultSet.getInt("count");
             }
-            connection.close();
             return result == 1;
         } catch (SQLException e) {
             throw new RuntimeException(e);

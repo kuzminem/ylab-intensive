@@ -1,4 +1,6 @@
-package io.ylab.intensive.lesson04.eventsourcing;
+package io.ylab.intensive.lesson04.eventsourcing.db;
+
+import io.ylab.intensive.lesson04.eventsourcing.Person;
 
 public class Order {
     private String command;

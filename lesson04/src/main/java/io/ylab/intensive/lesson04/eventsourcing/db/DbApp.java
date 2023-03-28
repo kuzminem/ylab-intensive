@@ -7,7 +7,6 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.GetResponse;
 import io.ylab.intensive.lesson04.DbUtil;
 import io.ylab.intensive.lesson04.RabbitMQUtil;
-import io.ylab.intensive.lesson04.eventsourcing.Order;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
