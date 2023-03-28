@@ -35,11 +35,12 @@ public class PersistentMapImpl implements PersistentMap {
         preparedStatement.setString(1, this.mapName);
         preparedStatement.setString(2, key);
         ResultSet resultSet = preparedStatement.executeQuery();
+        connection.close();
+
         int result = 0;
         if (resultSet.next()) {
             result = resultSet.getInt("count");
         }
-        connection.close();
         return result == 1;
     }
 
@@ -52,11 +53,12 @@ public class PersistentMapImpl implements PersistentMap {
         PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
         preparedStatement.setString(1, this.mapName);
         ResultSet resultSet = preparedStatement.executeQuery();
+        connection.close();
+
         List<String> keys = new ArrayList<>();
         while (resultSet.next()) {
             keys.add(resultSet.getString("key"));
         }
-        connection.close();
         return keys;
     }
 
@@ -71,11 +73,12 @@ public class PersistentMapImpl implements PersistentMap {
         preparedStatement.setString(1, this.mapName);
         preparedStatement.setString(2, key);
         ResultSet resultSet = preparedStatement.executeQuery();
+        connection.close();
+
         String value = null;
         if (resultSet.next()) {
             value = resultSet.getString("value");
         }
-        connection.close();
         return value;
     }
 
@@ -96,24 +99,9 @@ public class PersistentMapImpl implements PersistentMap {
     @Override
     public void put(String key, String value) throws SQLException {
         if (containsKey(key)) {
-            update(key, value);
-        } else {
-            create(key, value);
+            remove(key);
         }
-    }
-
-    private void update(String key, String value) throws SQLException {
-        Connection connection = this.dataSource.getConnection();
-        String insertQuery = "update persistent_map "
-                + "set value = ? "
-                + "where map_name = ? "
-                + "and key = ?";
-        PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
-        preparedStatement.setString(1, value);
-        preparedStatement.setString(2, this.mapName);
-        preparedStatement.setString(3, key);
-        preparedStatement.executeUpdate();
-        connection.close();
+        create(key, value);
     }
 
     private void create(String key, String value) throws SQLException {

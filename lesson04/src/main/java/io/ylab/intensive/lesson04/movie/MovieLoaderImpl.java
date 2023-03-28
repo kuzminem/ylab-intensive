@@ -19,7 +19,6 @@ public class MovieLoaderImpl implements MovieLoader {
     public void loadData(File file) {
         try (BufferedReader reader = new BufferedReader(
                 new FileReader(file, Charset.forName("CP1252")))) {
-
             String line = reader.readLine();
             if (!line.equals("Year;Length;Title;Subject;Actor;Actress;Director;Popularity;Awards;*Image")) {
                 throw new IllegalArgumentException("The first line should have a header");
@@ -28,10 +27,8 @@ public class MovieLoaderImpl implements MovieLoader {
             if (!line.equals("INT;INT;STRING;CAT;CAT;CAT;CAT;INT;BOOL;STRING")) {
                 throw new IllegalArgumentException("The second line should have a header");
             }
-
-            Packer packer = new Packer();
             Batch batch = new Batch(this.dataSource);
-
+            Packer packer = new Packer();
             for (int linesCounter = 3; ; linesCounter++) {
                 line = reader.readLine();
                 if (line == null) {
