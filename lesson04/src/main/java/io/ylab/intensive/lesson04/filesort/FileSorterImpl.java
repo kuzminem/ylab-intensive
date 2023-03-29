@@ -22,15 +22,13 @@ public class FileSorterImpl implements FileSorter {
     @Override
     public File sort(File data) {
         load(data);
-        String folder = data.getPath()
-                .substring(0, data.getPath().lastIndexOf('\\') + 1);
-        File res = new File(folder + "sorted.txt");
         try {
+            File res = new File(data.getParent() + "/sorted.txt");
             save(res);
-        } catch (SQLException | IOException e) {
+            return res;
+        } catch (IOException | SQLException e) {
             throw new RuntimeException(e);
         }
-        return res;
     }
 
     private void load(File data) {
@@ -59,10 +57,10 @@ public class FileSorterImpl implements FileSorter {
                     + "order by val desc";
             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
             ResultSet resultSet = preparedStatement.executeQuery();
+            connection.close();
             while (resultSet.next()) {
                 writer.write(resultSet.getLong("val") + "\r\n");
             }
-            connection.close();
         }
     }
 }
