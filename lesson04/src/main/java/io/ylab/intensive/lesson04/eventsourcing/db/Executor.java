@@ -14,44 +14,40 @@ public class Executor {
         this.dataSource = dataSource;
     }
 
-    public void deletePerson(Person person) {
+    public boolean delete(Person person) {
         if (!isPresent(person.getId())) {
-            System.out.println("person_id " + person.getId() + " not found");
+            return false;
         } else {
-            try {
-                java.sql.Connection connection = this.dataSource.getConnection();
+            try (java.sql.Connection connection = this.dataSource.getConnection()) {
                 String insertQuery = "delete "
                         + "from person "
                         + "where person_id = ?";
                 PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
                 preparedStatement.setLong(1, person.getId());
                 preparedStatement.executeUpdate();
-                connection.close();
+                return true;
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    public void savePerson(Person person) {
+    public void save(Person person) {
         if (isPresent(person.getId())) {
-            updatePerson(person);
+            update(person);
         } else {
-            createPerson(person);
+            create(person);
         }
     }
 
     private boolean isPresent(Long personId) {
-        try {
-            java.sql.Connection connection = this.dataSource.getConnection();
+        try (java.sql.Connection connection = this.dataSource.getConnection()) {
             String selectQuery = "select count(*) "
                     + "from person "
                     + "where person_id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
             preparedStatement.setLong(1, personId);
             ResultSet resultSet = preparedStatement.executeQuery();
-            connection.close();
-
             int result = 0;
             if (resultSet.next()) {
                 result = resultSet.getInt("count");
@@ -62,9 +58,8 @@ public class Executor {
         }
     }
 
-    private void updatePerson(Person person) {
-        try {
-            java.sql.Connection connection = this.dataSource.getConnection();
+    private void update(Person person) {
+        try (java.sql.Connection connection = this.dataSource.getConnection()) {
             String insertQuery = "update person "
                     + "set "
                     + "first_name = ?, "
@@ -77,15 +72,13 @@ public class Executor {
             preparedStatement.setString(3, person.getMiddleName());
             preparedStatement.setLong(4, person.getId());
             preparedStatement.executeUpdate();
-            connection.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void createPerson(Person person) {
-        try {
-            java.sql.Connection connection = this.dataSource.getConnection();
+    private void create(Person person) {
+        try (java.sql.Connection connection = this.dataSource.getConnection()) {
             String insertQuery = "insert into person "
                     + "(person_id, first_name, last_name, middle_name) "
                     + "values (?, ?, ?, ?)";
@@ -95,7 +88,6 @@ public class Executor {
             preparedStatement.setString(3, person.getLastName());
             preparedStatement.setString(4, person.getMiddleName());
             preparedStatement.executeUpdate();
-            connection.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

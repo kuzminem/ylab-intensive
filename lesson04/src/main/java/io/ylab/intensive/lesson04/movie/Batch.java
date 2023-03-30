@@ -1,23 +1,22 @@
 package io.ylab.intensive.lesson04.movie;
 
 import javax.sql.DataSource;
+import java.io.Closeable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 
-public class Batch {
+public class Batch implements Closeable {
     private final Connection connection;
     private final PreparedStatement preparedStatement;
 
     public Batch(DataSource dataSource) throws SQLException {
         this.connection = dataSource.getConnection();
         this.connection.setAutoCommit(false);
-
         String insertQuery = "insert into movie "
                 + "(year, length, title, subject, actors, actress, director, popularity, awards) "
                 + "values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
         this.preparedStatement = this.connection.prepareStatement(insertQuery);
     }
 
@@ -75,9 +74,13 @@ public class Batch {
         this.preparedStatement.addBatch();
     }
 
-    public void send() throws SQLException {
-        this.preparedStatement.executeBatch();
-        this.connection.commit();
-        this.connection.close();
+    public void close() {
+        try {
+            this.preparedStatement.executeBatch();
+            this.connection.commit();
+            this.connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -58,14 +58,14 @@ public class ApiApp {
         System.out.println();
     }
 
-    private static ConnectionFactory initMQ() throws Exception {
-        return RabbitMQUtil.buildConnectionFactory();
-    }
-
     private static String show(Person person) {
         return (person.getId() + " "
                 + person.getLastName() + " "
                 + person.getName() + " "
                 + person.getMiddleName());
+    }
+
+    private static ConnectionFactory initMQ() throws Exception {
+        return RabbitMQUtil.buildConnectionFactory();
     }
 }

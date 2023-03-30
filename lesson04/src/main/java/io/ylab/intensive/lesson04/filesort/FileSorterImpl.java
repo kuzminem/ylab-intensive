@@ -21,8 +21,8 @@ public class FileSorterImpl implements FileSorter {
 
     @Override
     public File sort(File data) {
-        load(data);
         try {
+            load(data);
             File res = new File(data.getParent() + "/sorted.txt");
             save(res);
             return res;
@@ -32,32 +32,24 @@ public class FileSorterImpl implements FileSorter {
     }
 
     private void load(File data) {
-        try (BufferedReader reader = new BufferedReader(
-                new FileReader(data))) {
-            Batch batch = new Batch(this.dataSource, 1000);
-            while (true) {
-                String line = reader.readLine();
-                if (line == null) {
-                    break;
-                }
+        try (BufferedReader reader = new BufferedReader(new FileReader(data));
+             Batch batch = new Batch(this.dataSource, 1000)) {
+            for (String line; (line = reader.readLine()) != null; ) {
                 batch.add(Long.parseLong(line));
             }
-            batch.close();
         } catch (IOException | SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     private void save(File res) throws SQLException, IOException {
-        try (BufferedWriter writer = new BufferedWriter(
-                new FileWriter(res))) {
-            Connection connection = this.dataSource.getConnection();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(res));
+             Connection connection = this.dataSource.getConnection()) {
             String selectQuery = "select val "
                     + "from numbers "
                     + "order by val desc";
             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
             ResultSet resultSet = preparedStatement.executeQuery();
-            connection.close();
             while (resultSet.next()) {
                 writer.write(resultSet.getLong("val") + "\r\n");
             }
