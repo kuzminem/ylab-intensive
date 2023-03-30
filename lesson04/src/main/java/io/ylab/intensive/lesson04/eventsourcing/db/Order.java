@@ -15,7 +15,7 @@ public class Order {
     }
 
     public String getCommand() {
-        return command;
+        return this.command;
     }
 
     public void setCommand(String command) {
@@ -23,7 +23,7 @@ public class Order {
     }
 
     public Person getPerson() {
-        return person;
+        return this.person;
     }
 
     public void setPerson(Person person) {

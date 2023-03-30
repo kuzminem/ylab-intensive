@@ -7,6 +7,7 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.GetResponse;
 import io.ylab.intensive.lesson04.DbUtil;
 import io.ylab.intensive.lesson04.RabbitMQUtil;
+import io.ylab.intensive.lesson04.eventsourcing.Person;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -25,10 +26,13 @@ public class DbApp {
                 GetResponse message = channel.basicGet(queueName, true);
                 if (message != null) {
                     Order order = mapper.readValue(message.getBody(), Order.class);
+                    Person person = order.getPerson();
                     if (order.getCommand().equals("save")) {
-                        executor.savePerson(order.getPerson());
+                        executor.save(person);
                     } else if (order.getCommand().equals("delete")) {
-                        executor.deletePerson(order.getPerson());
+                        if (executor.delete(person)) {
+                            System.err.println("Person with id " + person.getId() + " not found");
+                        }
                     }
                 }
             }

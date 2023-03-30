@@ -48,10 +48,10 @@ public class PersonApiImpl implements PersonApi {
 
     @Override
     public void deletePerson(Long personId) {
-        Person person = new Person();
-        person.setId(personId);
-        Order order = new Order("delete", person);
         try {
+            Person person = new Person();
+            person.setId(personId);
+            Order order = new Order("delete", person);
             give(order);
         } catch (IOException e) {
             System.err.println(e);
@@ -60,9 +60,9 @@ public class PersonApiImpl implements PersonApi {
 
     @Override
     public void savePerson(Long personId, String firstName, String lastName, String middleName) {
-        Person person = new Person(personId, firstName, lastName, middleName);
-        Order order = new Order("save", person);
         try {
+            Person person = new Person(personId, firstName, lastName, middleName);
+            Order order = new Order("save", person);
             give(order);
         } catch (IOException e) {
             System.err.println(e);
@@ -74,16 +74,13 @@ public class PersonApiImpl implements PersonApi {
         if (!isPresent(personId)) {
             return null;
         }
-        try {
-            java.sql.Connection connection = this.dataSource.getConnection();
+        try (java.sql.Connection connection = this.dataSource.getConnection()) {
             String selectQuery = "select first_name, last_name, middle_name "
                     + "from person "
                     + "where person_id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
             preparedStatement.setLong(1, personId);
             ResultSet resultSet = preparedStatement.executeQuery();
-            connection.close();
-
             Person person = new Person();
             person.setId(personId);
             if (resultSet.next()) {
@@ -99,13 +96,10 @@ public class PersonApiImpl implements PersonApi {
 
     @Override
     public List<Person> findAll() {
-        try {
-            java.sql.Connection connection = this.dataSource.getConnection();
+        try (java.sql.Connection connection = this.dataSource.getConnection()) {
             String selectQuery = "select * from person";
             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
             ResultSet resultSet = preparedStatement.executeQuery();
-            connection.close();
-
             List<Person> personList = new ArrayList<>();
             while (resultSet.next()) {
                 Person person = new Person();
@@ -122,8 +116,7 @@ public class PersonApiImpl implements PersonApi {
     }
 
     private boolean isPresent(Long personId) {
-        try {
-            java.sql.Connection connection = this.dataSource.getConnection();
+        try (java.sql.Connection connection = this.dataSource.getConnection()) {
             String selectQuery = "select count(*) "
                     + "from person "
                     + "where person_id = ?";
@@ -134,7 +127,6 @@ public class PersonApiImpl implements PersonApi {
             if (resultSet.next()) {
                 result = resultSet.getInt("count");
             }
-            connection.close();
             return result == 1;
         } catch (SQLException e) {
             throw new RuntimeException(e);
