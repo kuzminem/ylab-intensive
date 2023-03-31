@@ -21,57 +21,41 @@ public class Batch implements Closeable {
     }
 
     public void add(Movie movie) throws SQLException {
-        if (movie.getYear() == null) {
-            this.preparedStatement.setNull(1, Types.INTEGER);
-        } else {
-            this.preparedStatement.setInt(1, movie.getYear());
-        }
-
-        if (movie.getLength() == null) {
-            this.preparedStatement.setNull(2, Types.INTEGER);
-        } else {
-            this.preparedStatement.setInt(2, movie.getLength());
-        }
-
-        this.preparedStatement.setString(3, movie.getTitle());
-
-        if (movie.getSubject() == null) {
-            this.preparedStatement.setNull(4, Types.VARCHAR);
-        } else {
-            this.preparedStatement.setString(4, movie.getSubject());
-        }
-
-        if (movie.getActors() == null) {
-            this.preparedStatement.setNull(5, Types.VARCHAR);
-        } else {
-            this.preparedStatement.setString(5, movie.getActors());
-        }
-
-        if (movie.getActress() == null) {
-            this.preparedStatement.setNull(6, Types.VARCHAR);
-        } else {
-            this.preparedStatement.setString(6, movie.getActress());
-        }
-
-        if (movie.getDirector() == null) {
-            this.preparedStatement.setNull(7, Types.VARCHAR);
-        } else {
-            this.preparedStatement.setString(7, movie.getDirector());
-        }
-
-        if (movie.getPopularity() == null) {
-            this.preparedStatement.setNull(8, Types.INTEGER);
-        } else {
-            this.preparedStatement.setInt(8, movie.getPopularity());
-        }
-
-        if (movie.getAwards() == null) {
-            this.preparedStatement.setNull(9, Types.BOOLEAN);
-        } else {
-            this.preparedStatement.setBoolean(9, movie.getAwards());
-        }
+        setInt(1, movie.getYear());
+        setInt(2, movie.getLength());
+        setVarchar(3, movie.getTitle());
+        setVarchar(4, movie.getSubject());
+        setVarchar(5, movie.getActors());
+        setVarchar(6, movie.getActress());
+        setVarchar(7, movie.getDirector());
+        setInt(8, movie.getPopularity());
+        setBoolean(9, movie.getAwards());
 
         this.preparedStatement.addBatch();
+    }
+
+    private void setInt(int index, Integer parameter) throws SQLException {
+        if (parameter == null) {
+            this.preparedStatement.setNull(index, Types.INTEGER);
+        } else {
+            this.preparedStatement.setInt(parameter, parameter);
+        }
+    }
+
+    private void setVarchar(int index, String parameter) throws SQLException {
+        if (parameter == null) {
+            this.preparedStatement.setNull(index, Types.VARCHAR);
+        } else {
+            this.preparedStatement.setString(index, parameter);
+        }
+    }
+
+    private void setBoolean(int index, Boolean parameter) throws SQLException {
+        if (parameter == null) {
+            this.preparedStatement.setNull(index, Types.BOOLEAN);
+        } else {
+            this.preparedStatement.setBoolean(index, parameter);
+        }
     }
 
     public void close() {

@@ -17,18 +17,17 @@ public class Executor {
     public boolean delete(Person person) {
         if (!isPresent(person.getId())) {
             return false;
-        } else {
-            try (java.sql.Connection connection = this.dataSource.getConnection()) {
-                String insertQuery = "delete "
-                        + "from person "
-                        + "where person_id = ?";
-                PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
-                preparedStatement.setLong(1, person.getId());
-                preparedStatement.executeUpdate();
-                return true;
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+        }
+        try (java.sql.Connection connection = this.dataSource.getConnection()) {
+            String insertQuery = "delete "
+                    + "from person "
+                    + "where person_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+            preparedStatement.setLong(1, person.getId());
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
