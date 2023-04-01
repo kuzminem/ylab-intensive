@@ -10,14 +10,14 @@
         <groupId>io.ylab.intensive</groupId>
     </parent>
 
-    <artifactId>lesson04</artifactId>
+    <artifactId>lesson05</artifactId>
     <version>1.0</version>
 
     <dependencies>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.6</version>
+            <version>42.2.27</version>
         </dependency>
         <dependency>
             <groupId>com.rabbitmq</groupId>
@@ -30,9 +30,9 @@
             <version>1.7.36</version>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.14.2</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>5.3.24</version>
         </dependency>
     </dependencies>
 
