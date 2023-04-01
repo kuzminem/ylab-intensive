@@ -4,10 +4,12 @@ import com.rabbitmq.client.ConnectionFactory;
 import io.ylab.intensive.lesson05.DbUtil;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
 
+@Configuration
 public class Config {
 
     @Bean
