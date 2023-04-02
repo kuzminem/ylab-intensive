@@ -1,30 +1,33 @@
 package io.ylab.intensive.lesson05.eventsourcing.db;
 
 import io.ylab.intensive.lesson05.eventsourcing.Person;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Repository
 public class PersonRepository {
-    DataSource dataSource;
+    Connection connection;
 
-    public PersonRepository(DataSource dataSource) {
-        this.dataSource = dataSource;
+    @Autowired
+    public PersonRepository(Connection connection) {
+        this.connection = connection;
     }
 
     public boolean delete(Person person) {
         if (!isPresent(person.getId())) {
             return false;
         }
-        try (java.sql.Connection connection = this.dataSource.getConnection()) {
+        try {
             String insertQuery = "delete "
                     + "from person "
                     + "where person_id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+            PreparedStatement preparedStatement =
+                    this.connection.prepareStatement(insertQuery);
             preparedStatement.setLong(1, person.getId());
             preparedStatement.executeUpdate();
             return true;
@@ -42,11 +45,12 @@ public class PersonRepository {
     }
 
     private boolean isPresent(Long personId) {
-        try (java.sql.Connection connection = this.dataSource.getConnection()) {
+        try {
             String selectQuery = "select count(*) "
                     + "from person "
                     + "where person_id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+            PreparedStatement preparedStatement =
+                    this.connection.prepareStatement(selectQuery);
             preparedStatement.setLong(1, personId);
             ResultSet resultSet = preparedStatement.executeQuery();
             int result = 0;
@@ -60,14 +64,15 @@ public class PersonRepository {
     }
 
     private void update(Person person) {
-        try (java.sql.Connection connection = this.dataSource.getConnection()) {
+        try {
             String insertQuery = "update person "
                     + "set "
                     + "first_name = ?, "
                     + "last_name = ?, "
                     + "middle_name = ? "
                     + "where person_id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+            PreparedStatement preparedStatement =
+                    this.connection.prepareStatement(insertQuery);
             preparedStatement.setString(1, person.getName());
             preparedStatement.setString(2, person.getLastName());
             preparedStatement.setString(3, person.getMiddleName());
@@ -79,11 +84,12 @@ public class PersonRepository {
     }
 
     private void create(Person person) {
-        try (java.sql.Connection connection = this.dataSource.getConnection()) {
+        try {
             String insertQuery = "insert into person "
                     + "(person_id, first_name, last_name, middle_name) "
                     + "values (?, ?, ?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+            PreparedStatement preparedStatement =
+                    this.connection.prepareStatement(insertQuery);
             preparedStatement.setLong(1, person.getId());
             preparedStatement.setString(2, person.getName());
             preparedStatement.setString(3, person.getLastName());
