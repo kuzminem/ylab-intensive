@@ -1,44 +1,31 @@
 package io.ylab.intensive.lesson05.eventsourcing.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rabbitmq.client.BuiltinExchangeType;
 import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import io.ylab.intensive.lesson05.DbUtil;
 import io.ylab.intensive.lesson05.eventsourcing.Person;
 import io.ylab.intensive.lesson05.eventsourcing.db.Order;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 
-@Component
+@Service
 public class PersonApiImpl implements PersonApi {
     final String exchangeName = "exc";
-    final String queueName = "queue";
-    final ConnectionFactory connectionFactory;
-    final Connection rabbitConnection;
     final Channel channel;
-    final DataSource dataSource = DbUtil.buildDataSource();
-    final java.sql.Connection dataConnection = this.dataSource.getConnection();
+    final Connection connection;
     final ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
-    public PersonApiImpl(ConnectionFactory connectionFactory) throws SQLException, IOException, TimeoutException {
-        this.connectionFactory = connectionFactory;
-        this.rabbitConnection = connectionFactory.newConnection();
-        this.channel = this.rabbitConnection.createChannel();
-        this.channel.exchangeDeclare(this.exchangeName, BuiltinExchangeType.TOPIC);
-        this.channel.queueDeclare(this.queueName, true, false, false, null);
-        this.channel.queueBind(this.queueName, this.exchangeName, "*");
+    public PersonApiImpl(Channel channel, Connection connection) {
+        this.channel = channel;
+        this.connection = connection;
     }
 
     private void give(Order order) throws IOException {
@@ -79,7 +66,7 @@ public class PersonApiImpl implements PersonApi {
                     + "from person "
                     + "where person_id = ?";
             PreparedStatement preparedStatement =
-                    this.dataConnection.prepareStatement(selectQuery);
+                    this.connection.prepareStatement(selectQuery);
             preparedStatement.setLong(1, personId);
             ResultSet resultSet = preparedStatement.executeQuery();
             Person person = new Person();
@@ -100,7 +87,7 @@ public class PersonApiImpl implements PersonApi {
         try {
             String selectQuery = "select * from person";
             PreparedStatement preparedStatement =
-                    this.dataConnection.prepareStatement(selectQuery);
+                    this.connection.prepareStatement(selectQuery);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Person> personList = new ArrayList<>();
             while (resultSet.next()) {
@@ -123,7 +110,7 @@ public class PersonApiImpl implements PersonApi {
                     + "from person "
                     + "where person_id = ?";
             PreparedStatement preparedStatement =
-                    this.dataConnection.prepareStatement(selectQuery);
+                    this.connection.prepareStatement(selectQuery);
             preparedStatement.setLong(1, personId);
             ResultSet resultSet = preparedStatement.executeQuery();
             int result = 0;
