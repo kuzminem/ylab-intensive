@@ -24,12 +24,12 @@ public class SQLQueryBuilderImpl implements SQLQueryBuilder {
     @Override
     public String queryForTable(String tableName) throws SQLException {
         ResultSet resultSet = this.metaData
-                .getTables(null, null, tableName, null);
+                .getTables(null, "%", tableName, null);
         if (!resultSet.next()) {
             return null;
         }
         resultSet = this.metaData
-                .getColumns(null, null, tableName, null);
+                .getColumns(null, "%", tableName, "%");
         List<String> columns = new ArrayList<>();
         while (resultSet.next()) {
             columns.add(resultSet.getString("column_name"));
@@ -42,7 +42,7 @@ public class SQLQueryBuilderImpl implements SQLQueryBuilder {
     @Override
     public List<String> getTables() throws SQLException {
         ResultSet resultSet = this.metaData
-                .getTables(null, null, null, null);
+                .getTables(null, "%", "%", null);
         List<String> tables = new ArrayList<>();
         while (resultSet.next()) {
             tables.add(resultSet.getString("table_name"));
