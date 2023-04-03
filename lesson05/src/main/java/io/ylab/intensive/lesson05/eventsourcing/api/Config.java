@@ -1,8 +1,5 @@
 package io.ylab.intensive.lesson05.eventsourcing.api;
 
-import com.rabbitmq.client.BuiltinExchangeType;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.context.annotation.Bean;
@@ -10,9 +7,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.concurrent.TimeoutException;
 
 @Configuration
 @ComponentScan(basePackages = "io.ylab.intensive.lesson05.eventsourcing.api")
@@ -38,22 +32,5 @@ public class Config {
         connectionFactory.setPassword("guest");
         connectionFactory.setVirtualHost("/");
         return connectionFactory;
-    }
-
-    @Bean
-    public Channel channel() throws IOException, TimeoutException {
-        final String exchangeName = "exc";
-        final String queueName = "queue";
-        Connection connection = connectionFactory().newConnection();
-        Channel channel = connection.createChannel();
-        channel.exchangeDeclare(exchangeName, BuiltinExchangeType.TOPIC);
-        channel.queueDeclare(queueName, true, false, false, null);
-        channel.queueBind(queueName, exchangeName, "*");
-        return channel;
-    }
-
-    @Bean
-    public java.sql.Connection connection() throws SQLException {
-        return dataSource().getConnection();
     }
 }
