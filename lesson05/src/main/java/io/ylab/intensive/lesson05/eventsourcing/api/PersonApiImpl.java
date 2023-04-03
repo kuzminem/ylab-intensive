@@ -1,12 +1,15 @@
 package io.ylab.intensive.lesson05.eventsourcing.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rabbitmq.client.BuiltinExchangeType;
 import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.ConnectionFactory;
 import io.ylab.intensive.lesson05.eventsourcing.Person;
 import io.ylab.intensive.lesson05.eventsourcing.db.Order;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,18 +17,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
-@Service
+@Component
 public class PersonApiImpl implements PersonApi {
     final String exchangeName = "exc";
+    final String queueName = "queue";
     final Channel channel;
     final Connection connection;
     final ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
-    public PersonApiImpl(Channel channel, Connection connection) {
-        this.channel = channel;
-        this.connection = connection;
+    public PersonApiImpl(ConnectionFactory connectionFactory, DataSource dataSource)
+            throws SQLException, IOException, TimeoutException {
+        this.channel = connectionFactory
+                .newConnection()
+                .createChannel();
+        this.channel.exchangeDeclare(exchangeName, BuiltinExchangeType.TOPIC);
+        this.channel.queueDeclare(queueName, true, false, false, null);
+        this.channel.queueBind(queueName, exchangeName, "*");
+        this.connection = dataSource.getConnection();
     }
 
     private void give(Order order) throws IOException {

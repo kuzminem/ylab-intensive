@@ -16,8 +16,8 @@ public class DbApp {
 
         final ConnectionFactory connectionFactory =
                 applicationContext.getBean(ConnectionFactory.class);
-        PersonRepository personRepository =
-                applicationContext.getBean(PersonRepository.class);
+        Executor executor =
+                applicationContext.getBean(Executor.class);
         final ObjectMapper mapper = new ObjectMapper();
         final String queueName = "queue";
 
@@ -29,9 +29,9 @@ public class DbApp {
                     Order order = mapper.readValue(message.getBody(), Order.class);
                     Person person = order.getPerson();
                     if (order.getCommand().equals("save")) {
-                        personRepository.save(person);
+                        executor.save(person);
                     } else if (order.getCommand().equals("delete")) {
-                        if (personRepository.delete(person)) {
+                        if (executor.delete(person)) {
                             System.err.println("Person with id " + person.getId() + " not found");
                         }
                     }

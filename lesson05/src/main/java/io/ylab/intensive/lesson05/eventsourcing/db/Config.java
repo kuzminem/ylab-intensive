@@ -8,7 +8,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 @Configuration
@@ -46,10 +45,5 @@ public class Config {
         connectionFactory.setPassword("guest");
         connectionFactory.setVirtualHost("/");
         return connectionFactory;
-    }
-
-    @Bean
-    public Connection connection() throws SQLException {
-        return dataSource().getConnection();
     }
 }

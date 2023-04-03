@@ -2,20 +2,21 @@ package io.ylab.intensive.lesson05.eventsourcing.db;
 
 import io.ylab.intensive.lesson05.eventsourcing.Person;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@Repository
-public class PersonRepository {
+@Component
+public class Executor {
     Connection connection;
 
     @Autowired
-    public PersonRepository(Connection connection) {
-        this.connection = connection;
+    public Executor(DataSource dataSource) throws SQLException {
+        this.connection = dataSource.getConnection();
     }
 
     public boolean delete(Person person) {
