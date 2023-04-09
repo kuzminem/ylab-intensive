@@ -14,12 +14,11 @@ public class Sorter {
     public File sortFile(File dataFile) throws IOException {
         final int NUMBER_OF_FILES = 2;
         final int dataFileLines = countLines(dataFile);
-        final String folder = dataFile.getPath()
-                .substring(0, dataFile.getPath().lastIndexOf('\\') + 1);
+        final String folder = dataFile.getParent();
 
         List<TempFile> tempFiles = separate(dataFile, dataFileLines, folder, NUMBER_OF_FILES);
 
-        return collect(tempFiles, folder + "sorted.txt", dataFileLines);
+        return collect(tempFiles, folder + "/sorted.txt", dataFileLines);
     }
 
     private int countLines(File dataFile) throws IOException {
@@ -37,11 +36,11 @@ public class Sorter {
         try (BufferedReader reader = new BufferedReader(new FileReader(dataFile))) {
             int tempFileLines = dataFileLines / filesNumber;
             for (int i = 0; i < filesNumber - 1; i++) {
-                tempFiles.add(new TempFile(folder + i + ".txt",
+                tempFiles.add(new TempFile(folder + "/" + i + ".txt",
                         readList(reader, tempFileLines)));
             }
             tempFileLines = dataFileLines - tempFileLines * (filesNumber - 1);
-            tempFiles.add(new TempFile(folder + (filesNumber - 1) + ".txt",
+            tempFiles.add(new TempFile(folder + "/" + (filesNumber - 1) + ".txt",
                     readList(reader, tempFileLines)));
         }
         return tempFiles;
